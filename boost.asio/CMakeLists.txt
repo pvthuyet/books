@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
-project(example01 LANGUAGES CXX)
 
+project(boost-asio LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(BOOST_ROOT "../../../../boost_1_74_0")
+set(BOOST_ROOT "../../boost_1_74_0")
 set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
 set(BOOST_LIBRARYDIR "${BOOST_ROOT}/stage/lib")
 set(Boost_NO_SYSTEM_PATHS ON)
@@ -33,19 +33,8 @@ message(STATUS "Boost_MINOR_VERSION: ${Boost_MINOR_VERSION}")
 message(STATUS "Boost_SUBMINOR_VERSION: ${Boost_SUBMINOR_VERSION}")
 message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS: ${Boost_LIB_DIAGNOSTIC_DEFINITIONS}")
 
-# Client app
-add_executable(client "client.cpp")
-target_include_directories(client PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(client PRIVATE 
-	Boost::date_time
-	Boost::regex
-	)
-
-
-#Server app
-add_executable(server "server.cpp")
-target_include_directories(server PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(server PRIVATE 
-	Boost::date_time
-	Boost::regex
-	)
+### Chapter 01
+# 1. create endpoint
+add_subdirectory(chapter01/create-endpoint)
+# 2. active socket
+add_subdirectory(chapter01/active-socket)
