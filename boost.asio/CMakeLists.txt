@@ -38,3 +38,5 @@ message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS: ${Boost_LIB_DIAGNOSTIC_DEFINIT
 add_subdirectory(chapter01/create-endpoint)
 # 2. active socket
 add_subdirectory(chapter01/active-socket)
+# 3. passive socket
+add_subdirectory(chapter01/passive-socket)
