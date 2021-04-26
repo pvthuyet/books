@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8 FATAL_ERROR)
 
-project(boost-asio LANGUAGES CXX)
+project("Data-Structures-and-Algorithms" CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,14 +33,5 @@ message(STATUS "Boost_MINOR_VERSION: ${Boost_MINOR_VERSION}")
 message(STATUS "Boost_SUBMINOR_VERSION: ${Boost_SUBMINOR_VERSION}")
 message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS: ${Boost_LIB_DIAGNOSTIC_DEFINITIONS}")
 
-### Chapter 01
-# 1. create endpoint
-add_subdirectory(chapter01/create-endpoint)
-# 2. active socket
-add_subdirectory(chapter01/active-socket)
-# 3. passive socket
-add_subdirectory(chapter01/passive-socket)
-# 4. resolving DNS
-add_subdirectory(chapter01/resolving-DNS)
-# 5. Binding socket to endpoint
-add_subdirectory(chapter01/socket-endpoint)
+### Graph
+add_subdirectory(graph/DFS)
