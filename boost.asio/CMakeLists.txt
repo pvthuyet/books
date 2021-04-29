@@ -44,3 +44,7 @@ add_subdirectory(chapter01/passive-socket)
 add_subdirectory(chapter01/resolving-DNS)
 # 5. Binding socket to endpoint
 add_subdirectory(chapter01/socket-endpoint)
+# 6. Connecting a socket
+add_subdirectory(chapter01/connecting-socket)
+# 7. Connecting a socket with dns
+add_subdirectory(chapter01/connecting-socket2)
