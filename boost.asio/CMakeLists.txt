@@ -48,3 +48,5 @@ add_subdirectory(chapter01/socket-endpoint)
 add_subdirectory(chapter01/connecting-socket)
 # 7. Connecting a socket with dns
 add_subdirectory(chapter01/connecting-socket2)
+# 8. Accept connection
+add_subdirectory(chapter01/accept-connection)
