@@ -1,2 +1,2 @@
 add_executable(algorithms "main.cpp" 
-	"permutation.hpp")
+	"permutation.hpp" "backtracking.hpp")
