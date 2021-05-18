@@ -68,6 +68,28 @@ public:
         for (auto& s : res) cout << s << '\n';
     }
 
+    static void NQueen(int N)
+    {
+        vector<vector<int>> result;
+        int row[10] = { 0 };
+        BackTracking{}.bt(0, N, row, result);
+        for (auto& row : result) {
+            for (auto& cell : row) cout << cell << ' ';
+            cout << endl;
+        }
+    }
+
+    static void HamiltonianPath()
+    {
+        int N = 10, M = 14;
+        vector<vector<int>> Edges{ {8, 1}, {8, 2}, {1, 3}, {5, 4}, {1, 5}, {8, 6}, {1, 7}, {2, 9}, {5, 10}, {7, 8}, {6, 3}, {3, 5}, {7, 9}, {6, 10} };
+        //int N = 4, M = 4;
+        //vector<vector<int>> Edges{ {1,2}, {2,3}, {3,4}, {2,4} };
+
+        auto rs = BackTracking{}.checkHam(N, M, Edges);
+        cout << "ham result: " << rs << endl;
+    }
+
 private:
     vector<string> findPath(vector<vector<int>>& m, int n) {
         vector<string> res;
@@ -185,5 +207,87 @@ private:
             s[k - 1] = input[i];
             genStrings(input, n, k-1, s, res);
         }
+    }
+
+    bool place(int r, int c, int row[]) 
+    {
+        for (int prev = 0; prev < c; prev++) {
+            if (row[prev] == r or abs(row[prev] - r) == abs(prev - c))
+                return false;
+        }
+        return true;
+    }
+
+    void bt(int c, int n, int row[], auto& result) 
+    {
+        if (n == 2 or n == 3)
+            return;
+
+        if (c == n) {
+            vector<int> v;
+            for (int i = 0; i < n; i++)
+                v.push_back(row[i] + 1);
+            result.push_back(v);
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (place(i, c, row)) {
+                row[c] = i;
+                bt(c + 1, n, row, result);
+            }
+        }
+    }
+
+    bool checkHam(int N, int M, vector<vector<int>> Edges)
+    {
+        vector<vector<int>> adj(N, vector<int>(N, 0));
+        for (auto& e : Edges) {
+            adj[e[0] - 1][e[1] - 1] = adj[e[1] - 1][e[0] - 1] = 1;
+        }
+
+        vector<int> path(N, -1);
+        path[0] = 0;
+        bool rs = false;
+        rs = checking(N, adj, path, 0, 1);
+        
+        cout << "path: ";
+        for (auto x : path) cout << x + 1 << ' ';
+        cout << endl;
+        return rs;
+    }
+
+    //void print(auto& v, int N) {
+    //    for (int i = 1; i <= N; ++i) {
+    //        std::cout << i << ": ";
+    //        for (auto& x : v[i]) cout << x << ' ';
+    //        cout << endl;
+    //    }
+    //}
+
+    bool isValid(int N, auto const& adj, auto& path, int v, int pos)
+    {
+        if (adj[v][path[pos - 1]] == 0) return false;
+
+        for (int i = 0; i < pos; ++i) {
+            if (path[i] == v) return false;
+        }
+
+        //if (pos == N - 1 && adj[v][path[0]] == 0) {
+        //    return false;
+        //}
+        return true;
+    }
+
+    bool checking(int N, auto& adj, auto& path, int v, int pos)
+    {
+        if (pos == N) return true;
+        for (int i = 0; i < N; ++i) {
+            if (isValid(N, adj, path, i, pos)) {
+                path[pos] = i;
+                if (checking(N, adj, path, i, pos + 1)) return true;
+                path[pos] = -1;
+            }
+        }
+        return false;
     }
 };

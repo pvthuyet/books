@@ -36,3 +36,5 @@ message(STATUS "Boost_LIB_DIAGNOSTIC_DEFINITIONS: ${Boost_LIB_DIAGNOSTIC_DEFINIT
 ### Graph
 add_subdirectory(graph/DFS)
 add_subdirectory(geeksforgeeks)
+add_subdirectory(bit_algorithms)
+add_subdirectory(dynamic_programming)

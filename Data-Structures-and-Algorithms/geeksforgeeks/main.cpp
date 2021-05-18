@@ -8,6 +8,8 @@ int main()
 	//BackTracking::solveMaze();
 	//BackTracking::generateAllBinaryStrings(2);
 	//BackTracking::generateAllStrings("abcde", 1);
-	BackTracking::findMaxPath();
+	//BackTracking::findMaxPath();
+	//BackTracking::NQueen(4);
+	BackTracking::HamiltonianPath();
 	return EXIT_SUCCESS;
 }
