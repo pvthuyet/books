@@ -8,6 +8,8 @@ int main()
 	//non_blocking_poll2();
 	//remove_work_object1();
 	//dealing_many_thread1();
-	working_boost_bind();
+	//working_boost_bind();
+	//using_post();
+	using_dispatch();
 	return EXIT_SUCCESS;
 }
