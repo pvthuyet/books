@@ -1,5 +1,6 @@
 #include <iostream>
 #include "started_asio.hpp"
+#include "tcp.hpp"
 int main()
 {
 	//blocking_the_run1();
@@ -10,6 +11,11 @@ int main()
 	//dealing_many_thread1();
 	//working_boost_bind();
 	//using_post();
-	using_dispatch();
+	//using_dispatch();
+	//using_none_strand();
+	//using_strand();
+	//handling_exception();
+	//synchronous_client();
+	asynchronous_client();
 	return EXIT_SUCCESS;
 }
