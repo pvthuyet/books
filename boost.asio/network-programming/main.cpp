@@ -16,6 +16,8 @@ int main()
 	//using_strand();
 	//handling_exception();
 	//synchronous_client();
-	asynchronous_client();
+	//asynchronous_client();
+	//asynchronous_server();
+	reading_writing_socket();
 	return EXIT_SUCCESS;
 }
