@@ -53,3 +53,4 @@ add_subdirectory(chapter01/accept-connection)
 
 # Network programming
 add_subdirectory(network-programming)
+add_subdirectory(network-programming/client-server)
