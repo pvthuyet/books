@@ -20,11 +20,11 @@ public:
 	hive(const hive&) = delete;
 	hive& operator=(const hive&) = delete;
 
-	auto& get_service();
+	boost::asio::io_service& get_service();
 	bool is_stopped() const;
 
-	auto poll();
-	auto run();
+	boost::asio::io_service::count_type poll();
+	boost::asio::io_service::count_type run();
 	void stop();
 	void reset();
 };

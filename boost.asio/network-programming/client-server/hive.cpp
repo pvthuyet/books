@@ -10,7 +10,7 @@ hive::hive() :
 
 hive::~hive() noexcept = default;
 
-auto& hive::get_service()
+boost::asio::io_service& hive::get_service()
 {
 	return m_ios;
 }
@@ -20,12 +20,12 @@ bool hive::is_stopped() const
 	return m_shutdown.load();
 }
 
-auto hive::poll()
+boost::asio::io_service::count_type hive::poll()
 {
 	return m_ios.poll();
 }
 
-auto hive::run()
+boost::asio::io_service::count_type hive::run()
 {
 	return m_ios.run();
 }
