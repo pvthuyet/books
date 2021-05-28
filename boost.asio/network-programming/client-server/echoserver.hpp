@@ -3,9 +3,11 @@
 #include "hive.hpp"
 
 SG_BEGIN
+
 class echo_server
 {
 public:
-	echo_server();
+	void start();
 };
+
 SG_END

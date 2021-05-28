@@ -4,6 +4,6 @@
 
 int main()
 {
-	SG::echo_server server{};
+	SG::echo_server{}.start();
 	return EXIT_SUCCESS;
 }
