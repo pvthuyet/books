@@ -18,6 +18,7 @@ bool EchoSeverAcceptor::OnAccept(boost::shared_ptr<Connection> connection, const
 
 void EchoSeverAcceptor::OnTimer(const boost::posix_time::time_duration& delta)
 {
+	return;
 	LOGENTER;
 	LOGINFO(BOOST_CURRENT_LOCATION, delta);
 	LOGEND;
