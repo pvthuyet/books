@@ -1,6 +1,8 @@
 #include "echo_server_connection.hpp"
 #include "logger.hpp"
 
+using namespace std::literals;
+
 SG_BEGIN
 EchoServerConnection::EchoServerConnection(boost::shared_ptr<hive> hiv) :
 	Connection(hiv)

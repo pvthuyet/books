@@ -17,9 +17,13 @@ public:
 	}
 
 	template<typename First, typename... Args>
-	void info(First first, const Args&... args)
+	void info(const boost::source_location& loc, First first, const Args&... args)
 	{
+		std::string_view fname(loc.function_name());
+		std::string_view nameonly{ fname.substr(0, fname.find_first_of('(')) };
+
 		std::lock_guard<std::mutex> lock(mMux);
+		std::cout << nameonly << ":" << loc.line() << " - ";
 		std::cout << first;
 		auto outSpace = [](auto const& arg) {
 			std::cout << ' ' << arg;
@@ -28,10 +32,14 @@ public:
 		std::cout << std::endl;
 	};
 
-	void trace(std::string_view msg, const boost::source_location& loc)
+	template<typename MSG>
+	void trace(MSG msg, const boost::source_location& loc)
 	{
+		std::string_view fname(loc.function_name());
+		std::string_view nameonly{ fname.substr(0, fname.find_first_of('(')) };
+
 		std::lock_guard<std::mutex> lock(mMux);
-		std::cout << loc.function_name() << ":" << loc.line() << " - " << msg << std::endl;
+		std::cout << nameonly << ":" << loc.line() << " - " << msg << std::endl;
 	}
 
 private:
@@ -41,7 +49,9 @@ private:
 	std::mutex mMux;
 };
 
-#define LOGENTER	logger::get_inst().trace("Enter {", BOOST_CURRENT_LOCATION)
-#define LOGEND		logger::get_inst().trace("End }", BOOST_CURRENT_LOCATION)
+#define LOGENTER		logger::get_inst().trace("Enter {"sv, BOOST_CURRENT_LOCATION)
+#define LOGEND			logger::get_inst().trace("End }"sv, BOOST_CURRENT_LOCATION)
+#define LOGDEBUG(msg)	logger::get_inst().trace(msg, BOOST_CURRENT_LOCATION)
+#define LOGINFO			logger::get_inst().info
 
 SG_END
