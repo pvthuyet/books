@@ -5,6 +5,6 @@ add_executable(client-server main.cpp "echoserver.hpp" "echoserver.cpp" "define.
  "connection.hpp" "connection.cpp" "echo_server_connection.cpp"
  "echo_server_connection.hpp"
  "echo_server_connection.cpp"
-  "logger.hpp"  "echo_server_acceptor.hpp" "echo_server_acceptor.cpp")
+  "logger.hpp"  "echo_server_acceptor.hpp" "echo_server_acceptor.cpp" "client_connection.hpp" "client_connection.cpp" "client_get_http.hpp" "client_get_http.cpp")
 target_include_directories(client-server PRIVATE ${Boost_INCLUDE_DIRS})
 target_link_libraries(client-server PRIVATE ${Boost_LIBRARIES})
