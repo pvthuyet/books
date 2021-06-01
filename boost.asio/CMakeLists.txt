@@ -51,6 +51,9 @@ add_subdirectory(chapter01/connecting-socket2)
 # 8. Accept connection
 add_subdirectory(chapter01/accept-connection)
 
+### Chapter 02
+add_subdirectory(chapter02)
+
 # Network programming
 add_subdirectory(network-programming)
 add_subdirectory(network-programming/client-server)
