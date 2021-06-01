@@ -17,4 +17,6 @@ public:
 	void run_dfs(int v);
 	void dfs_util();
 	void print_result() const;
+	bool isCyclic();
+	bool isCycleUndirected();
 };
