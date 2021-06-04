@@ -13,7 +13,7 @@ void processRequest(asio::ip::tcp::socket& sock)
 	std::cout << "receive: " << str << std::endl;
 	constexpr char response_buf[] = { 0x48, 0x69, 0x21, 0x0a };
 	asio::write(sock, asio::buffer(response_buf));
-	//sock.shutdown(asio::socket_base::shutdown_send);
+	sock.shutdown(asio::socket_base::shutdown_send);
 }
 
 void SyncTCPServer::start()
@@ -24,6 +24,7 @@ void SyncTCPServer::start()
 		asio::io_service ios;
 		asio::ip::tcp::acceptor acp(ios, ep);
 		asio::ip::tcp::socket sock(ios);
+		//acp.listen();
 		acp.accept(sock);
 		processRequest(sock);
 	}
