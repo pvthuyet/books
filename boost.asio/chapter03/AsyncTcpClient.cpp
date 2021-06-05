@@ -27,12 +27,14 @@ void AsyncTcpClient::start()
 		client.emulateLongConputationOp(10, "127.0.0.1", 3333, handler, 1);
 		std::this_thread::sleep_for(std::chrono::seconds(5));
 
-		client.emulateLongConputationOp(10, "127.0.0.1", 3334, handler, 2);
-		client.cancelRequest(1);
-		std::this_thread::sleep_for(std::chrono::seconds(6));
+		//client.emulateLongConputationOp(10, "127.0.0.1", 3334, handler, 2);
+		//client.cancelRequest(1);
+		//std::this_thread::sleep_for(std::chrono::seconds(6));
 
-		client.emulateLongConputationOp(10, "127.0.0.1", 3335, handler, 3);
-		std::this_thread::sleep_for(std::chrono::seconds(15));
+		//client.emulateLongConputationOp(10, "127.0.0.1", 3335, handler, 3);
+		//std::this_thread::sleep_for(std::chrono::seconds(15));
+		std::cout << "Press Enter to exit.\n";
+		std::cin.get();
 		client.close();
 	}
 	catch (std::exception const& ex) {
@@ -103,6 +105,7 @@ void AsyncTcpClient::emulateLongConputationOp(
 									std::istream strm(&ses->m_res_buf);
 									std::getline(strm, ses->m_res);
 								}
+								//std::cout << "received from server: " << ses->m_res << std::endl;
 								onRequestComplete(ses);
 							});
 					}
