@@ -15,12 +15,11 @@ public:
 			std::string str(boost::asio::buffers_begin(revbuf), boost::asio::buffers_begin(revbuf) + revbuf.size());
 			std::cout << "receive: " << str << std::endl;
 			int i{};
-			while (i != 1000000) {
+			while (i != 1000000) 
 				i++;
-				std::this_thread::sleep_for(std::chrono::milliseconds(500));
-				const std::string response = "response from server " + std::to_string(i) + "\n";
-				boost::asio::write(sock, boost::asio::buffer(response));
-			}
+			std::this_thread::sleep_for(std::chrono::milliseconds(500));
+			const std::string response = "response from server " + std::to_string(i) + "\n";
+			boost::asio::write(sock, boost::asio::buffer(response));		
 		}
 		catch (const std::exception const& ex) {
 			std::cout << ex.what() << std::endl;
