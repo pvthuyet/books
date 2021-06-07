@@ -17,7 +17,7 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
 # Note boost 1.75.0 error
-find_package(Boost 1.74.0 REQUIRED COMPONENTS date_time regex thread)
+find_package(Boost 1.74.0 REQUIRED COMPONENTS date_time regex thread filesystem)
 if(NOT Boost_FOUND)
 	message(FATAL_ERROR "Not found Boost version 1.74.0")
 endif()
