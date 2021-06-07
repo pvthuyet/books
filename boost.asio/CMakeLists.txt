@@ -55,6 +55,7 @@ add_subdirectory(chapter01/accept-connection)
 add_subdirectory(chapter02)
 add_subdirectory(chapter03)
 add_subdirectory(chapter04)
+add_subdirectory(chapter05)
 
 # Network programming
 add_subdirectory(network-programming)
