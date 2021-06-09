@@ -1,0 +1,3 @@
+add_executable(allocation server.cpp)
+target_include_directories(allocation PRIVATE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(allocation PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})

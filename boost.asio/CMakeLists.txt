@@ -75,3 +75,6 @@ add_subdirectory(chapter05)
 # Network programming
 add_subdirectory(network-programming)
 add_subdirectory(network-programming/client-server)
+
+# Example from Boost.org
+add_subdirectory(boostorg/allocation)
