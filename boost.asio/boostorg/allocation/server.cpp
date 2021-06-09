@@ -224,8 +224,8 @@ private:
             if (!ec) {
                 std::make_shared<session>(std::move(sock))->start();
             }
-            });
-        do_accept();
+            do_accept();
+        });
     }
 };
 
@@ -235,6 +235,7 @@ int main()
         std::string rawip = "localhost";
         int port = 3333;
         boost::asio::io_context ioc;
+        std::cout << "Start server\n";
         server s(ioc, port);
         ioc.run();
     }

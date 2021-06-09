@@ -78,3 +78,5 @@ add_subdirectory(network-programming/client-server)
 
 # Example from Boost.org
 add_subdirectory(boostorg/allocation)
+add_subdirectory(boostorg/buffer)
+add_subdirectory(boostorg/chat)
