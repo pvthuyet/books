@@ -6,9 +6,9 @@
 
 int main()
 {
-	//HTTPClient::start_client();
+	HTTPClient::start_client();
 	//async_server::start_server();
-	SyncSSLClient::statrt_client();
+	//SyncSSLClient::statrt_client();
 	//ssl_server::start_server();
 	return EXIT_SUCCESS;
 }

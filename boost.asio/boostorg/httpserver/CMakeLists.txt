@@ -1,0 +1,3 @@
+add_executable(httpserver main.cpp "header.hpp" "reply.hpp" "reply.cpp" "mime_types.hpp" "mime_types.cpp" "request.hpp" "request_handler.hpp" "request_handler.cpp" "request_parser.hpp" "request_parser.cpp" "connection.hpp" "connection.cpp" "connection_manager.hpp" "connection_manager.cpp" "server.hpp" "server.cpp")
+target_include_directories(httpserver PRIVATE ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
+target_link_libraries(httpserver PRIVATE ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})
