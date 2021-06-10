@@ -17,7 +17,7 @@ set(Boost_USE_MULTITHREADED      ON)
 set(Boost_USE_STATIC_RUNTIME    OFF)
 
 # Note boost 1.75.0 error
-find_package(Boost 1.74.0 REQUIRED COMPONENTS date_time regex thread filesystem)
+find_package(Boost 1.74.0 REQUIRED COMPONENTS date_time regex thread filesystem context coroutine)
 if(NOT Boost_FOUND)
 	message(FATAL_ERROR "Not found Boost version 1.74.0")
 endif()
@@ -86,3 +86,4 @@ add_subdirectory(boostorg/tracking)
 add_subdirectory(boostorg/httpserver)
 add_subdirectory(boostorg/multicast)
 add_subdirectory(boostorg/nonblocking)
+add_subdirectory(boostorg/spawn)
