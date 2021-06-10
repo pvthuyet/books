@@ -102,7 +102,7 @@ public:
 private:
 	std::string get_password() const
 	{
-		return "test";
+		return "1234";
 	}
 
 	void do_accept()
