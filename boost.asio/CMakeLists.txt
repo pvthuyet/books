@@ -91,3 +91,6 @@ add_subdirectory(boostorg/ssl)
 add_subdirectory(boostorg/timeouts)
 add_subdirectory(boostorg/timer)
 #add_subdirectory(boostorg/unix_domain_socket)
+
+# Boost.Beast
+add_subdirectory(boostorg/beast)
