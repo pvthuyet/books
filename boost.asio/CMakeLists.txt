@@ -94,3 +94,6 @@ add_subdirectory(boostorg/timer)
 
 # Boost.Beast
 add_subdirectory(boostorg/beast)
+
+# Boost good example
+add_subdirectory(boost-good-example/fastest-way-read-file)
