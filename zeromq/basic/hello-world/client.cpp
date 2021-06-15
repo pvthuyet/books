@@ -19,8 +19,7 @@ int main()
 		// get the reply
 		zmq::message_t reply;
 		sock.recv(&reply);
-		std::cout << "Received: ";
-		std::cout.write(static_cast<const char*>(reply.data()), reply.size());
+		std::cout << "Received: " << reply.to_string_view() << std::endl;
 	}
 
 	return EXIT_SUCCESS;

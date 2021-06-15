@@ -5,8 +5,8 @@
 int main()
 {
     // Prepare our context and socket
-    zmq::context_t context(1);
-    zmq::socket_t socket(context, ZMQ_REP);
+    zmq::context_t ctx(1);
+    zmq::socket_t socket(ctx, ZMQ_REP);
     socket.bind("tcp://*:5555");
 
     while (true) {
@@ -14,10 +14,10 @@ int main()
 
         //  Wait for next request from client
         socket.recv(&request);
-        std::cout << "Received Hello" << std::endl;
+        std::cout << "Received: " << request.to_string_view() << std::endl;
 
         //  Do some 'work'
-        std::this_thread::sleep_for(std::chrono::seconds(3));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
 
         //  Send reply back to client
         zmq::message_t reply(5);
