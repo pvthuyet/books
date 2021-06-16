@@ -30,7 +30,7 @@ int main()
 	zmq::context_t ctx(1);
 	zmq::socket_t pub(ctx, ZMQ_PUB);
 	pub.bind("tcp://*:5556");
-	//pub.bind("ipc://weather.ipc");
+	pub.bind("ipc://weather.ipc");
 
 	srandom((unsigned)time(NULL));
 	while (1) {

@@ -16,3 +16,4 @@ set(WINDOWS_LIBRARIES "Ws2_32.lib;IPHLPAPI.lib")
 ### example
 add_subdirectory(basic/hello-world)
 add_subdirectory(basic/weather-station)
+add_subdirectory(basic/parallel-task)
