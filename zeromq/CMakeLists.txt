@@ -14,8 +14,8 @@ message(STATUS "ZERO_MQ_LIBRARIES: ${ZERO_MQ_LIBRARIES}")
 
 set(WINDOWS_LIBRARIES "Ws2_32.lib;IPHLPAPI.lib")
 ### example
-add_subdirectory(basic/hello-world)
-add_subdirectory(basic/weather-station)
-add_subdirectory(basic/parallel-task)
-add_subdirectory(socket-and-pattern/multiple-sockets)
-add_subdirectory(socket-and-pattern/router-dealer)
+add_subdirectory(1-basic/hello-world)
+add_subdirectory(1-basic/weather-station)
+add_subdirectory(1-basic/parallel-task)
+add_subdirectory(2-socket-and-pattern/multiple-sockets)
+add_subdirectory(2-socket-and-pattern/router-dealer)
