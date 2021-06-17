@@ -10,3 +10,8 @@ target_link_libraries(wuserver PRIVATE ${ZERO_MQ_LIBRARIES} ${WINDOWS_LIBRARIES}
 add_executable(wuclient wuclient.cpp)
 target_include_directories(wuclient PRIVATE ${ZERO_MQ_INCLUDEDIR} ${CPP_ZMQ_INCLUDEDIR})
 target_link_libraries(wuclient PRIVATE ${ZERO_MQ_LIBRARIES} ${WINDOWS_LIBRARIES})
+
+# proxy
+add_executable(wuproxy wuproxy.cpp)
+target_include_directories(wuproxy PRIVATE ${ZERO_MQ_INCLUDEDIR} ${CPP_ZMQ_INCLUDEDIR})
+target_link_libraries(wuproxy PRIVATE ${ZERO_MQ_LIBRARIES} ${WINDOWS_LIBRARIES})
