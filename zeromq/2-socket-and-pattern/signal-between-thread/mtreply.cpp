@@ -2,8 +2,15 @@
 #include <zhelpers.hpp>
 #include <thread>
 
+int test()
+{
+	return 0;
+}
+
 int main()
 {
+	return test();
+
 	using namespace std::string_literals;
 	zmq::context_t ctx(1);
 
