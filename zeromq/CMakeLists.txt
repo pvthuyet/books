@@ -6,36 +6,42 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# set name
+set(GSL_NAME "GSL-3.1.0")
+set(FMT_NAME "fmt-7.1.3")
+set(LIBZMQ_NAME "libzmq-4.3.4")
+SET(CPPZMQ_NAME "cppzmq-4.7.1")
+
 ##### saigonlib ROOT
 set(WINDOWS_LIBRARIES "Ws2_32.lib;IPHLPAPI.lib")
 set(SGLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../saigonlib")
 
-set(LIBZMQ_INCLUDEDIR "${SGLIB_ROOT}/libzmq-4.3.4/include")
-set(CPPZMQ_INCLUDEDIR "${SGLIB_ROOT}/cppzmq-4.7.1/include")
+set(LIBZMQ_INCLUDEDIR "${SGLIB_ROOT}/${LIBZMQ_NAME}/include")
+set(CPPZMQ_INCLUDEDIR "${SGLIB_ROOT}/${CPPZMQ_NAME}/include")
 
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(LIBZMQ_DIR "${SGLIB_ROOT}/libzmq-4.3.4/lib/x64")
+	set(LIBZMQ_DIR "${SGLIB_ROOT}/${LIBZMQ_NAME}/lib/x64")
 else()
-	set(LIBZMQ_DIR "${SGLIB_ROOT}/libzmq-4.3.4/lib/win32")
+	set(LIBZMQ_DIR "${SGLIB_ROOT}/${LIBZMQ_NAME}/lib/win32")
 endif()
 
 # gsl
-set(GSL_INCLUDEDIR "${SGLIB_ROOT}/GSL-3.1.0/include")
+set(GSL_INCLUDEDIR "${SGLIB_ROOT}/${GSL_NAME}/include")
 
 # fmt
-set(FMT_INCLUDEDIR "${SGLIB_ROOT}/fmt-7.1.3/include")
+set(FMT_INCLUDEDIR "${SGLIB_ROOT}/${FMT_NAME}/include")
 if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(FMT_LIBDIR "${SGLIB_ROOT}/fmt-7.1.3/lib/x64")
+	set(FMT_LIBDIR "${SGLIB_ROOT}/${FMT_NAME}/lib/x64")
 else()
-	set(FMT_LIBDIR "${SGLIB_ROOT}/fmt-7.1.3/lib/win32")
+	set(FMT_LIBDIR "${SGLIB_ROOT}/${FMT_NAME}/lib/win32")
 endif()
 
 # SG library
 set(SGLIB_INCLUDEDIR "${GSL_INCLUDEDIR};${FMT_INCLUDEDIR};${LIBZMQ_INCLUDEDIR};${CPPZMQ_INCLUDEDIR}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmtd.lib;${LIBZMQ_DIR}/libzmq-v142-mt-sgd-4_3_4.lib")
+	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmtd.lib;${LIBZMQ_DIR}/libzmq-sd.lib")
 else()
-	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmt.lib;${LIBZMQ_DIR}/libzmq-v142-mt-s-4_3_4.lib")
+	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmt.lib;${LIBZMQ_DIR}/libzmq-s.lib")
 endif()
 message(STATUS "SGLIB_INCLUDEDIR: ${SGLIB_INCLUDEDIR}")
 message(STATUS "SGLIB_LIBRARIES: ${SGLIB_LIBRARIES}")
