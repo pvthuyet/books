@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <zhelpers.hpp>
 #include <format>
+#include <fmt/format.h>
 
 int main()
 {
@@ -16,7 +17,8 @@ int main()
 		//  Read message contents
 		std::string contents = s_recv(subs);
 		
-		std::cout << std::format("[{}] {}\n"sv, address, contents);
+		//std::cout << std::format("[{}] {}\n"sv, address, contents);
+		fmt::print("[{}] {}\n", address, contents);
 	}
 	return 0;
 }
