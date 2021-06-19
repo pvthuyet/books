@@ -7,15 +7,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ##### saigonlib ROOT
+set(WINDOWS_LIBRARIES "Ws2_32.lib;IPHLPAPI.lib")
 set(SGLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../saigonlib")
 
-set(ZERO_MQ_LIBRARYDIR_DEBUG "${CMAKE_CURRENT_SOURCE_DIR}/libzmq/lib/Debug")
-set(ZERO_MQ_INCLUDEDIR "${CMAKE_CURRENT_SOURCE_DIR}/libzmq/include")
-set(CPP_ZMQ_INCLUDEDIR "${CMAKE_CURRENT_SOURCE_DIR}/cppzmq/include")
-set(ZERO_MQ_LIBRARIES "${ZERO_MQ_LIBRARYDIR_DEBUG}/libzmq-v142-mt-sgd-4_3_5.lib")
-message(STATUS "ZERO_MQ_LIBRARIES: ${ZERO_MQ_LIBRARIES}")
+set(LIBZMQ_INCLUDEDIR "${SGLIB_ROOT}/libzmq-4.3.4/include")
+set(CPPZMQ_INCLUDEDIR "${SGLIB_ROOT}/cppzmq-4.7.1/include")
 
-set(WINDOWS_LIBRARIES "Ws2_32.lib;IPHLPAPI.lib")
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(LIBZMQ_DIR "${SGLIB_ROOT}/libzmq-4.3.4/lib/x64")
+else()
+	set(LIBZMQ_DIR "${SGLIB_ROOT}/libzmq-4.3.4/lib/win32")
+endif()
 
 # gsl
 set(GSL_INCLUDEDIR "${SGLIB_ROOT}/GSL-3.1.0/include")
@@ -29,15 +31,14 @@ else()
 endif()
 
 # SG library
-set(SGLIB_INCLUDEDIR "${GSL_INCLUDEDIR};${FMT_INCLUDEDIR};${ZERO_MQ_INCLUDEDIR};${CPP_ZMQ_INCLUDEDIR}")
+set(SGLIB_INCLUDEDIR "${GSL_INCLUDEDIR};${FMT_INCLUDEDIR};${LIBZMQ_INCLUDEDIR};${CPPZMQ_INCLUDEDIR}")
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmtd.lib")
+	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmtd.lib;${LIBZMQ_DIR}/libzmq-v142-mt-sgd-4_3_4.lib")
 else()
-	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmt.lib")
+	set(SGLIB_LIBRARIES "${FMT_LIBDIR}/fmt.lib;${LIBZMQ_DIR}/libzmq-v142-mt-s-4_3_4.lib")
 endif()
 message(STATUS "SGLIB_INCLUDEDIR: ${SGLIB_INCLUDEDIR}")
 message(STATUS "SGLIB_LIBRARIES: ${SGLIB_LIBRARIES}")
-
 
 ### example
 add_subdirectory(1-basic/hello-world)

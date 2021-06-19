@@ -3,10 +3,10 @@ add_compile_definitions(ZMQ_STATIC) ## or #define ZMQ_STATIC beofre include zmq.
 
 # server
 add_executable(syncpub syncpub.cpp)
-target_include_directories(syncpub PRIVATE ${ZERO_MQ_INCLUDEDIR} ${CPP_ZMQ_INCLUDEDIR})
-target_link_libraries(syncpub PRIVATE ${ZERO_MQ_LIBRARIES} ${WINDOWS_LIBRARIES})
+target_include_directories(syncpub PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(syncpub PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 
 # client
 add_executable(syncsub syncsub.cpp)
-target_include_directories(syncsub PRIVATE ${ZERO_MQ_INCLUDEDIR} ${CPP_ZMQ_INCLUDEDIR})
-target_link_libraries(syncsub PRIVATE ${ZERO_MQ_LIBRARIES} ${WINDOWS_LIBRARIES})
+target_include_directories(syncsub PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(syncsub PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
