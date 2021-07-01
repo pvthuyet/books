@@ -42,7 +42,7 @@ int main()
 		std::stringstream request;
 		request << ++sequence;
 		s_send(*client, request.str());
-		s_sleep(1);
+		s_sleep(1000);
 
 		bool expect_rely = true;
 		while (expect_rely) {

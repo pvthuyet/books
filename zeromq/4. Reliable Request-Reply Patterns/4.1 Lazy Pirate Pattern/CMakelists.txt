@@ -5,3 +5,18 @@ add_compile_definitions(ZMQ_STATIC) ## or #define ZMQ_STATIC beofre include zmq.
 add_executable(lpclient "lpclient.cpp")
 target_include_directories(lpclient PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(lpclient PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# server
+add_executable(lpserver "lpserver.cpp")
+target_include_directories(lpserver PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(lpserver PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# simple pirate pattern : server
+add_executable(spqueue "spqueue.cpp")
+target_include_directories(spqueue PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(spqueue PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# simple pirate pattern: server-worker
+add_executable(spworker "spworker.cpp")
+target_include_directories(spworker PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(spworker PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
