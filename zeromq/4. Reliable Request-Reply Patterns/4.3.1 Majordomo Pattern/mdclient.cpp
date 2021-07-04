@@ -15,7 +15,7 @@ int main (int argc, char *argv [])
     mdcli session ("tcp://localhost:5555", verbose);
 
     int count;
-    for (count = 0; count < 100000; count++) {
+    for (count = 0; count < 2; count++) {
         zmsg * request = new zmsg("Hello world");
         zmsg * reply = session.send ("echo", request);
         if (reply) {
