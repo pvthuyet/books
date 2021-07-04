@@ -48,7 +48,7 @@ struct service
     std::string m_name;             //  Service name
     std::deque<zmsg*> m_requests;   //  List of client requests
     std::list<worker*> m_waiting;  //  List of waiting workers
-    size_t m_workers;               //  How many workers we have
+    size_t m_workers{};               //  How many workers we have
 
     service(std::string name)
     {
@@ -186,8 +186,9 @@ private:
    service_internal (std::string service_name, zmsg *msg)
    {
        if (service_name.compare("mmi.service") == 0) {
-           service * srv = m_services.at(msg->body());
-           if (srv && srv->m_workers) {
+           std::string body = msg->body();
+           auto it = m_services.find(body);
+           if (it != m_services.cend() && it->second->m_workers > 0) {
                msg->body_set("200");
            } else {
                msg->body_set("404");
