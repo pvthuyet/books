@@ -62,3 +62,5 @@ add_subdirectory(3-advanced-request-reply-patterns/asynchronous)
 add_subdirectory(3-advanced-request-reply-patterns/inter-broker-routing)
 #
 add_subdirectory("4. Reliable Request-Reply Patterns/4.1 Lazy Pirate Pattern")
+add_subdirectory("4. Reliable Request-Reply Patterns/4.3 Majordomo Pattern")
+add_subdirectory("4. Reliable Request-Reply Patterns/4.3.1 Majordomo Pattern")
