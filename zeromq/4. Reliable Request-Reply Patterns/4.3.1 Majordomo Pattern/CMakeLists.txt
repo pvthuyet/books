@@ -15,3 +15,8 @@ target_link_libraries(mdbroker1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(mdworker1 "mdwrkapi.hpp" "mdworker.cpp")
 target_include_directories(mdworker1 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(mdworker1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# tripping
+add_executable(tripping "tripping.cpp")
+target_include_directories(tripping PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(tripping PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
