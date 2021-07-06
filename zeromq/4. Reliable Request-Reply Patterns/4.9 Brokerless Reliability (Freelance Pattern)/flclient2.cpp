@@ -8,80 +8,67 @@
 
 #define REQUEST_TIMEOUT     100000
 #define MAX_RETRIES         3       //  Before we abandon
+//  If not a single service replies within this time, give up
+#define GLOBAL_TIMEOUT 2500
 
 class client
 {
 private:
 	zmq::context_t ctx_;
 	std::vector<std::string> servers_;
-	std::unique_ptr<zmq::socket_t> sock_;
+	zmq::socket_t sock_;
 public:
 	client() :
-		ctx_(1)
-	{
-	}
+		ctx_(1),
+		sock_(ctx_, zmq::socket_type::dealer)
+	{}
 
 	void add(std::string_view addr)
 	{
 		servers_.emplace_back(addr);
 	}
 
-	void send_request(std::string_view text)
+	void connect()
 	{
-		static int seq = 0;
-		zmsg msg(text.data());
+		for (auto& ep : servers_) {
+			sock_.connect(ep.c_str());
+		}
+	}
 
-		if (servers_.size() == 1) { // try 3 times if 1 server
-			for (int i = 0; i < MAX_RETRIES; ++i) {
-				auto reply = try_request(servers_[0], msg);
-				if (reply) {
-					reply->dump();
-					return;
+	void send(std::string_view text, int maxwait)
+	{
+		static int seq{};
+		zmsg req(text.data());
+		req.wrap(fmt::format("{}", ++seq).c_str(), nullptr);
+		req.wrap("", nullptr);
+
+		// Blast the request to all connected servers
+		for (int i = 0; i < servers_.size(); ++i) {
+			zmsg msg(req);
+			msg.send(sock_);
+		}
+
+		// wait for matching reply to arrive from anywhere
+		// since we can poll several times, calculate each one
+		while (--maxwait) {
+			std::vector<zmq::pollitem_t> items = { {sock_, 0, ZMQ_POLLIN, 0} };
+			zmq::poll(items, 1000);
+			if (items[0].revents & ZMQ_POLLIN) {
+				// reply is [empty][sequence][OK]
+				zmsg reply(sock_);
+				reply.unwrap2();
+				auto num = reply.unwrap2();
+				if (atoi(num.c_str()) == seq) {
+					reply.dump();
+					//fmt::print("{}\n", reply.body());
+					break;
 				}
-				fmt::print("W: no response from {}. Retring...\n", servers_[0]);
 			}
 		}
-		else { // try all servers
-			for (auto& ep : servers_) {
-				auto reply = try_request(ep, msg);
-				if (reply) {
-					reply->dump();
-					return;
-				}
-				fmt::print("W: no response from {}. Retring...\n", ep);
-			}
-		}
-		fmt::print("W: all servers are disable\n");
 	}
 
 private:
-	std::unique_ptr<zmsg> try_request(std::string_view ep, zmsg& req)
-	{
-		fmt::print("I: trying echo service at {}\n", ep);
-		sock_ = std::make_unique<zmq::socket_t>(ctx_, zmq::socket_type::dealer);
-		sock_->connect(ep.data());
-		// Configure socket to not wait at close time
-		sock_->set(zmq::sockopt::linger, 0);
-
-		// send request, wait safely for reply
-		zmsg msg(req); // duplicate request
-		static int seq = 0;
-		msg.wrap(std::to_string(++seq).c_str(), nullptr);
-		msg.wrap("", nullptr);
-
-		msg.send(*sock_);
-
-		std::vector<zmq::pollitem_t> items{
-			{*sock_, 0, ZMQ_POLLIN, 0}
-		};
-
-		zmq::poll(items, REQUEST_TIMEOUT);
-		if (items[0].revents & ZMQ_POLLIN) {
-			return std::make_unique<zmsg>(*sock_);
-		}
-
-		return {};
-	}
+	
 };
 
 int main(int argc, char* argv[])
@@ -95,9 +82,11 @@ int main(int argc, char* argv[])
 	for (int i = 1; i < argc; ++i) {
 		cli.add(argv[i]);
 	}
+
+	cli.connect();
+
 	for (int i = 0; i < 10; ++i) {
-		cli.send_request(fmt::format("hello world {}", i));
+		cli.send(fmt::format("hello world {}", i), 10);
 		s_sleep(1000);
 	}
-	return 0;
 }

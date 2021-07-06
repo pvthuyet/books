@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	}
 
 	server srv;
-	srv.start(zmq::socket_type::rep, "tcp://*:5555");
+	srv.start(zmq::socket_type::rep, argv[1]);
 
 	fmt::print("Press ENTER to stop server\n");
 	std::cin.get();
