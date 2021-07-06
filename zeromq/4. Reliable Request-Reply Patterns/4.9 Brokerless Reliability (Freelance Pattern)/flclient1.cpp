@@ -26,9 +26,9 @@ public:
 		servers_.emplace_back(addr);
 	}
 
-	void send_request()
+	void send_request(std::string_view text)
 	{
-		zmsg msg("Hello world");
+		zmsg msg(text.data());
 		if (servers_.size() == 1) { // try 3 times if 1 server
 			for (int i = 0; i < MAX_RETRIES; ++i) {
 				auto reply = try_request(servers_[0], msg);
@@ -89,6 +89,9 @@ int main(int argc, char* argv[])
 	for (int i = 1; i < argc; ++i) {
 		cli.add(argv[i]);
 	}
-	cli.send_request();
+	for (int i = 0; i < 100; ++i) {
+		cli.send_request(fmt::format("hello world {}", i));
+		s_sleep(1000);
+	}
 	return 0;
 }
