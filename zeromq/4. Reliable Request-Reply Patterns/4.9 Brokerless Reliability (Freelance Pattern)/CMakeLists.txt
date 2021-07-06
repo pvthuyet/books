@@ -10,3 +10,13 @@ target_link_libraries(flclient1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(flserver1 "flserver1.cpp")
 target_include_directories(flserver1 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(flserver1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# client 2
+add_executable(flclient2 "flclient2.cpp")
+target_include_directories(flclient2 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(flclient2 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# server 2
+add_executable(flserver2 "flserver2.cpp")
+target_include_directories(flserver2 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(flserver2 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
