@@ -4,13 +4,18 @@
 int main()
 {
 	using namespace std::literals;
-	using namespace date;
-	namespace chr = std::chrono;
-	auto ymd = 2015_y / sep / 25;
-	auto next_moth = ymd + months{ 1 };
-	chr::time_point<chr::system_clock> tp = chr::floor<chr::milliseconds>(chr::system_clock::now());
-	std::cout << tp << std::endl;
-	auto next = tp + 10ms;
-	std::cout << next << std::endl;
+	std::string name = "hello 1";
+	std::string ep = "tcp://127.0.0.1:5555";
+
+	flcaip::free_lance_client client;
+	client.connect(ep);
+
+	zmqpp::message_t req;
+	req << name;
+	auto reply = client.request(req);
+	if (reply) {
+		std::cout << "Client recevied: " << reply->get<std::string>(0) << std::endl;
+	}
+
 	return 0;
 }

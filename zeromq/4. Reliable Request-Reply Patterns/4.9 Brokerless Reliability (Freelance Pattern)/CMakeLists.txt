@@ -1,5 +1,5 @@
 # using static library of zero mq
-add_compile_definitions(ZMQ_STATIC) ## or #define ZMQ_STATIC beofre include zmq.hpp
+add_compile_definitions(ZMQ_STATIC ZMQPP_STATIC_DEFINE) ## or #define ZMQ_STATIC beofre include zmq.hpp
 
 # client
 add_executable(flclient1 "flclient1.cpp")
