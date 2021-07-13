@@ -17,5 +17,6 @@ int main()
 		std::cout << "Client recevied: " << reply->get<std::string>(0) << std::endl;
 	}
 
+	std::cin.get();
 	return 0;
 }

@@ -18,9 +18,9 @@
 //  If no server replies within this time, abandon request
 #define GLOBAL_TIMEOUT  3000    //  msecs
 //  PING interval for servers we think are alive
-#define PING_INTERVAL   2000    //  msecs
+#define PING_INTERVAL   3000    //  msecs
 //  Server considered dead if silent for this long
-#define SERVER_TTL      20000    //  msecs
+#define SERVER_TTL      6000    //  msecs
 
 //  .split API structure
 //  This API works in two halves, a common pattern for APIs that need to
@@ -84,10 +84,7 @@ public:
 			msg << "PING";
 			msg.push_front(endpoint_);
 			sock.send(msg);
-			//zmsg msg("PING");
-			//msg.wrap(endpoint_.c_str(), nullptr);
-			//msg.send(sock);
-			//pingat_ = now + chr::milliseconds{ PING_INTERVAL };
+			pingat_ = now + chr::milliseconds{ PING_INTERVAL };
 		}
 	}
 };
@@ -114,7 +111,7 @@ public:
 	std::vector<std::reference_wrapper<server>> actives_;
 
 	// Number of request ever sent
-	int sequence_;
+	int sequence_{};
 
 	// current request if any
 	std::unique_ptr<zmqpp::message> request_;
@@ -324,17 +321,15 @@ public:
 				else {
 					// find server to talk to, remove any expired ones
 					auto now = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
-					for (auto it = agt->actives_.begin(); it != agt->actives_.end(); ++it) {
-						if (now > it->get().expires_) {
-							agt->actives_.erase(it);
-						}
-						else {
-							auto req = agt->request_->copy();
-							req.push_front(it->get().endpoint_);
-							fmt::print("send {} to server\n", req.get<std::string>(0));
-							agt->router_->send(req);
-							break;
-						}
+					std::erase_if(agt->actives_, [now](auto const& item) {
+						return now > item.get().expires_;
+						});
+					if (agt->actives_.size() > 0) {
+						server& s = agt->actives_.front().get();
+						auto req = agt->request_->copy();
+						req.push_front(s.endpoint_);
+						agt->router_->send(req);
+						agt->request_ = nullptr;
 					}
 				}
 			}
