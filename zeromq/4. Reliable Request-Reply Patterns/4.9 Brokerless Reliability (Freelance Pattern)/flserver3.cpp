@@ -24,7 +24,7 @@ public:
 	void start(std::string_view port)
 	{
 		std::string bind_endpoint = fmt::format("tcp://*:{}", port);
-		std::string connect_endpoint = fmt::format("tcp://localhost:{}", port);
+		std::string connect_endpoint = fmt::format("tcp://127.0.0.1:{}", port);
 		socket_ = std::make_unique<zmq::socket_t>(ctx_, zmq::socket_type::router);
 
 		socket_->set(zmq::sockopt::routing_id, connect_endpoint);

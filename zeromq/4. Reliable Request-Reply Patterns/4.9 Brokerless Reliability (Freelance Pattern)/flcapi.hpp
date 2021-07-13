@@ -20,7 +20,7 @@
 //  PING interval for servers we think are alive
 #define PING_INTERVAL   2000    //  msecs
 //  Server considered dead if silent for this long
-#define SERVER_TTL      6000    //  msecs
+#define SERVER_TTL      20000    //  msecs
 
 //  .split API structure
 //  This API works in two halves, a common pattern for APIs that need to
@@ -279,6 +279,7 @@ public:
 		if (actor_->pipe()->receive(reply)) {
 			auto status = reply.get<std::string>(0);
 			if (status == "FAILED") {
+				fmt::print("REQUEST => FAILED\n");
 				return {};
 			}
 		}
@@ -330,6 +331,7 @@ public:
 						else {
 							auto req = agt->request_->copy();
 							req.push_front(it->get().endpoint_);
+							fmt::print("send {} to server\n", req.get<std::string>(0));
 							agt->router_->send(req);
 							break;
 						}
