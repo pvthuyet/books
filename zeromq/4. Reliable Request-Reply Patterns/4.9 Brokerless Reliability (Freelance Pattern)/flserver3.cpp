@@ -1,33 +1,34 @@
 //  Freelance server - Model 3
 //  Uses an ROUTER/ROUTER socket but just one thread
 
-#include <Windows.h>
+//#include <Windows.h>
 #include <fmt/core.h>
 #include <vld.h>
-#include <zhelpers.hpp>
-#include <zmsg.hpp>
+//#include <zhelpers.hpp>
+//#include <zmsg.hpp>
 #include <memory>
 #include <thread>
 #include <gsl/gsl_assert>
+#include <zmqpp/zmqpp.hpp>
 
 class server
 {
 private:
-	zmq::context_t ctx_;
-	std::unique_ptr<zmq::socket_t> socket_;
+	zmqpp::context_t ctx_;
+	std::unique_ptr<zmqpp::socket_t> socket_;
 	std::unique_ptr<std::jthread> thread_;
 
 public:
-	server() : ctx_(1)
+	server() : ctx_{}
 	{}
 
 	void start(std::string_view port)
 	{
 		std::string bind_endpoint = fmt::format("tcp://*:{}", port);
 		std::string connect_endpoint = fmt::format("tcp://127.0.0.1:{}", port);
-		socket_ = std::make_unique<zmq::socket_t>(ctx_, zmq::socket_type::router);
+		socket_ = std::make_unique<zmqpp::socket_t>(ctx_, zmqpp::socket_type::router);
 
-		socket_->set(zmq::sockopt::routing_id, connect_endpoint);
+		socket_->set(zmqpp::socket_option::identity, connect_endpoint);
 		socket_->bind(bind_endpoint.data());
 
 		thread_ = std::make_unique<std::jthread>([this](std::stop_token stk) {
@@ -48,30 +49,32 @@ private:
 	void run(std::stop_token stk)
 	{
 		fmt::print("server START\n");
+		zmqpp::poller_t poller{};
+		poller.add(*socket_);
 		while (!stk.stop_requested()) {
-			zmsg req(*socket_);
-			fmt::print("\n****************** received request\n");
-			req.dump();
+			poller.poll(1000);
+			if (poller.events(*socket_) & zmqpp::poller_t::poll_in) {
+				zmqpp::message_t req{};
+				socket_->receive(req);
 
-			// Frame 0: identity of client
-			// Frame 1: PING or client control frame
-			// Frame 2: request body
-			auto ident = req.unwrap2();
-			auto control = req.unwrap2();
+				// Frame 0: identity of client
+				// Frame 1: PING or client control frame
+				// Frame 2: request body
+				auto ident = req.get<std::string>(0);
+				auto control = req.get<std::string>(1);
 
-			zmsg reply{};
-			if (control == "PING") {
-				reply.append("PONG");
+				zmqpp::message_t reply{};
+				if (control == "PING") {
+					reply << "PONG";
+				}
+				else {
+					auto body = req.get<std::string>(2);
+					reply << control;
+					reply << fmt::format("{} => {}", body, "OK");
+				}
+				reply.push_front(ident);
+				socket_->send(reply);
 			}
-			else {
-				reply.append(control.c_str());
-				reply.append("OK");
-			}
-			reply.wrap(ident.c_str(), nullptr);
-
-			fmt::print("\n****************** reply\n");
-			reply.dump();
-			reply.send(*socket_);
 		}
 		fmt::print("server END\n");
 	}

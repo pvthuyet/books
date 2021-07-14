@@ -146,7 +146,11 @@ public:
 		// this method processes on message from our frontend class
 		// it's going to be CONNECT or REQUEST
 		auto command = msg.get<std::string>(0);
-		if (command == "CONNECT") {
+		if (command == "STOP") {
+			throw std::runtime_error("Exit client");
+		}
+
+		else if (command == "CONNECT") {
 			auto ep = msg.get<std::string>(1);
 			fmt::print("I: connecting to {}...\n", ep);
 			router_->connect(ep);
@@ -165,31 +169,6 @@ public:
 			// request expires after global timeout
 			expires_ = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now()) + std::chrono::milliseconds{ GLOBAL_TIMEOUT };
 		}
-
-		//std::string command = msg.unwrap2();
-		//if (command == "CONNECT") {
-		//	auto endpoint = msg.unwrap2();
-		//	fmt::print("I: connecting to {}...\n", endpoint);
-		//	router_->connect(endpoint);
-
-		//	servers_.push_back(server(endpoint));
-		//	actives_.emplace_back(servers_.back());
-		//}
-
-		//else if (command == "REQUEST") {
-		//	if (request_) {
-		//		throw std::runtime_error("request-reply cycle");
-		//	}
-
-		//	// prefix request with sequence number and empty envelope
-		//	msg.wrap(fmt::format("{}", ++sequence_).c_str(), nullptr);
-
-		//	// take ownership of request message
-		//	request_ = std::make_unique<zmsg>(msg);
-
-		//	// request expires after global timeout
-		//	expires_ = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now()) + std::chrono::milliseconds{ GLOBAL_TIMEOUT };
-		//}
 	}
 
 	void router_message(zmqpp::message& reply)
@@ -206,16 +185,6 @@ public:
 			found->refresh(true);
 		}
 
-
-		//auto endpoint = reply.unwrap2();
-		//auto found = std::ranges::find_if(servers_, [&endpoint](auto const& item) {
-		//	return endpoint == item.endpoint_;
-		//	});
-		//if (found != std::cend(servers_) && !found->alive_) {
-		//	actives_.emplace_back(*found);
-		//	found->refresh(true);
-		//}
-
 		// Frame 1 may be sequence number for reply
 		int seqnum{};
 		auto seqstr = reply.get<std::string>(1);
@@ -226,14 +195,6 @@ public:
 			reply.push_front("OK");
 			pipe_.send(reply);
 		}
-
-		//int seqnum{};
-		//auto seqstr = reply.unwrap2();
-		//auto [p, ec] = std::from_chars(std::data(seqstr), std::data(seqstr) + std::size(seqstr), seqnum);
-		//if (seqnum == sequence_) {
-		//	reply.wrap("OK", nullptr);
-		//	reply.send(pipe_);
-		//}
 	}
 };
 
@@ -265,6 +226,13 @@ public:
 		std::this_thread::sleep_for(std::chrono::milliseconds(64)); // allow connection to come up
 	}
 
+	void stop()
+	{
+		zmqpp::message_t msg;
+		msg << "STOP";
+		actor_->pipe()->send(msg);
+	}
+
 	std::optional<zmqpp::message_t> request(zmqpp::message_t& req)
 	{
 		// To implement the request method, the frontend object sends a message
@@ -285,60 +253,65 @@ public:
 
 	bool actor_routine(zmqpp::socket* pipe)
 	{
-		pipe->send(zmqpp::signal::ok);
-		auto agt = std::make_unique<agent>(ctx_, *pipe);
-		zmqpp::poller poller{};
-		poller.add(*pipe);
-		poller.add(*agt->router_);
-		while (1) {
-			auto ok = poller.poll(1000);
-			if (!ok) {
-				//fmt::print("[error] actor_routine\n");
-				//break;
-			}
-			if (poller.events(*pipe) & zmqpp::poller::poll_in) {
-				zmqpp::message_t msg;
-				if (pipe->receive(msg, true)) {
-					agt->control_message(msg);
+		try {
+			pipe->send(zmqpp::signal::ok);
+			auto agt = std::make_unique<agent>(ctx_, *pipe);
+			zmqpp::poller poller{};
+			poller.add(*pipe);
+			poller.add(*agt->router_);
+			while (1) {
+				auto ok = poller.poll(1000);
+				if (!ok) {
+					//fmt::print("[error] actor_routine\n");
+					//break;
 				}
-			}
-
-			if (poller.events(*agt->router_) & zmqpp::poller::poll_in) {
-				zmqpp::message_t msg;
-				if (agt->router_->receive(msg, true)) {
-					agt->router_message(msg);
-				}
-			}
-
-			if (agt->request_) {
-				auto now = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
-				if (now > agt->expires_) {
-					// request expired, kill it
-					zmqpp::message_t msg("FAILED");
-					agt->pipe_.send(msg);
-					agt->request_ = nullptr;
-				}
-				else {
-					// find server to talk to, remove any expired ones
-					auto now = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
-					std::erase_if(agt->actives_, [now](auto const& item) {
-						return now > item.get().expires_;
-						});
-					if (agt->actives_.size() > 0) {
-						server& s = agt->actives_.front().get();
-						auto req = agt->request_->copy();
-						req.push_front(s.endpoint_);
-						agt->router_->send(req);
-						agt->request_ = nullptr;
+				if (poller.events(*pipe) & zmqpp::poller::poll_in) {
+					zmqpp::message_t msg;
+					if (pipe->receive(msg, true)) {
+						agt->control_message(msg);
 					}
 				}
-			}
 
-			// disconnect and delete expired servers
-			// send heartbeats to idle servers if needed
-			for (auto& s : agt->servers_) {
-				s.ping(*agt->router_);
+				if (poller.events(*agt->router_) & zmqpp::poller::poll_in) {
+					zmqpp::message_t msg;
+					if (agt->router_->receive(msg, true)) {
+						agt->router_message(msg);
+					}
+				}
+
+				if (agt->request_) {
+					auto now = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
+					if (now > agt->expires_) {
+						// request expired, kill it
+						zmqpp::message_t msg("FAILED");
+						agt->pipe_.send(msg);
+						agt->request_ = nullptr;
+					}
+					else {
+						// find server to talk to, remove any expired ones
+						auto now = std::chrono::floor<std::chrono::milliseconds>(std::chrono::system_clock::now());
+						std::erase_if(agt->actives_, [now](auto const& item) {
+							return now > item.get().expires_;
+							});
+						if (agt->actives_.size() > 0) {
+							server& s = agt->actives_.front().get();
+							auto req = agt->request_->copy();
+							req.push_front(s.endpoint_);
+							agt->router_->send(req);
+							agt->request_ = nullptr;
+						}
+					}
+				}
+
+				// disconnect and delete expired servers
+				// send heartbeats to idle servers if needed
+				for (auto& s : agt->servers_) {
+					s.ping(*agt->router_);
+				}
 			}
+		}
+		catch (std::exception const& ex) {
+			fmt::print("[ERR] {}\n", ex.what());
 		}
 		return true;
 	}
