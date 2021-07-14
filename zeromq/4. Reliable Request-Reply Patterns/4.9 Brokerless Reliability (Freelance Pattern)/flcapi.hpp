@@ -190,10 +190,8 @@ public:
 		auto seqstr = reply.get<std::string>(1);
 		auto [p, ec] = std::from_chars(std::data(seqstr), std::data(seqstr) + std::size(seqstr), seqnum);
 		if (seqnum == sequence_) {
-			reply.pop_front();
-			reply.pop_front();
-			reply.push_front("OK");
-			pipe_.send(reply);
+			zmqpp::message_t msg(reply.get<std::string>(2));
+			pipe_.send(msg);
 		}
 	}
 };
