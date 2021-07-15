@@ -34,10 +34,12 @@ public:
 	{
 		thread_ = std::make_unique<std::jthread>([this](std::stop_token tok) {
 			
-			while (true) {
+			int i{};
+			while (i < 5) {
 				zmqpp::message_t msg;
 				sock_.receive(msg);
 				fmt::print("subscriber received: {}\n", msg.get<std::string>(0));
+				++i;
 			}
 			});
 	}
