@@ -101,3 +101,5 @@ add_subdirectory("4. Reliable Request-Reply Patterns/4.4 Asynchronous Majordomo 
 add_subdirectory("4. Reliable Request-Reply Patterns/4.5 Service Discovery")
 add_subdirectory("4. Reliable Request-Reply Patterns/4.6 Disconnected Reliability (Titanic Pattern)")
 add_subdirectory("4. Reliable Request-Reply Patterns/4.9 Brokerless Reliability (Freelance Pattern)")
+#
+add_subdirectory("5-Advanced Pub-Sub Patterns/5.1-Pub-Sub Tracing (Espresso Pattern)")
