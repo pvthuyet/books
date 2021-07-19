@@ -18,9 +18,12 @@ public:
 
 	auto operator<=>(kvsimple const& rhs) const = default;
 
-	void send(zmqpp::socket_t& publisher)
+	void send(zmqpp::socket_t& publisher, std::string identity = "")
 	{
 		zmqpp::message_t msg;
+		if (!identity.empty()) {
+			msg << identity;
+		}
 		msg << key_;
 		msg << sequence_;
 		msg << body_;
