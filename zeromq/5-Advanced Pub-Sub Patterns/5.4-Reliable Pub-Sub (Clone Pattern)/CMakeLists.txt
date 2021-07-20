@@ -11,6 +11,7 @@ add_executable(clonecli1 "clonecli1.cpp" "kvsimple.hpp")
 target_include_directories(clonecli1 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(clonecli1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 
+## Getting an Out-of-Band Snapshot
 # server
 add_executable(clonesrv2 "clonesrv2.cpp" "kvsimple.hpp")
 target_include_directories(clonesrv2 PRIVATE ${SGLIB_INCLUDEDIR})
@@ -20,3 +21,13 @@ target_link_libraries(clonesrv2 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(clonecli2 "clonecli2.cpp" "kvsimple.hpp")
 target_include_directories(clonecli2 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(clonecli2 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+## Republishing Updates from Clients
+# server
+add_executable(clonesrv3 "clonesrv3.cpp" "kvsimple.hpp")
+target_include_directories(clonesrv3 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonesrv3 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+#client
+add_executable(clonecli3 "clonecli3.cpp" "kvsimple.hpp")
+target_include_directories(clonecli3 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonecli3 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
