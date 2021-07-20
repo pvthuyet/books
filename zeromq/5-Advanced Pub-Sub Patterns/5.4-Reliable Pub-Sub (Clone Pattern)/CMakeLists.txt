@@ -31,3 +31,13 @@ target_link_libraries(clonesrv3 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(clonecli3 "clonecli3.cpp" "kvsimple.hpp")
 target_include_directories(clonecli3 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(clonecli3 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+## Working with Subtrees
+# server
+add_executable(clonesrv4 "clonesrv4.cpp" "kvsimple.hpp")
+target_include_directories(clonesrv4 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonesrv4 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+# client
+add_executable(clonecli4 "clonecli4.cpp" "kvsimple.hpp")
+target_include_directories(clonecli4 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonecli4 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})

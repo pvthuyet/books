@@ -18,12 +18,16 @@ public:
 
 	auto operator<=>(kvsimple const& rhs) const = default;
 
-	void send(zmqpp::socket_t& publisher, std::string identity = "")
+	void send(zmqpp::socket_t& publisher, std::string identity = "", std::string subtree="")
 	{
 		zmqpp::message_t msg;
 		if (!identity.empty()) {
 			msg << identity;
 		}
+		if (!subtree.empty()) {
+			msg << subtree;
+		}
+
 		msg << key_;
 		msg << sequence_;
 		msg << body_;
