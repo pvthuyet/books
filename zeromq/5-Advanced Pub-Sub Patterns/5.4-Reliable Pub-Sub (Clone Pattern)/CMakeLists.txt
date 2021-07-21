@@ -41,3 +41,8 @@ target_link_libraries(clonesrv4 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(clonecli4 "clonecli4.cpp" "kvsimple.hpp")
 target_include_directories(clonecli4 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(clonecli4 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+## Ephemeral Values
+add_executable(clonecli5 "clonecli5.cpp" "kvmsg.hpp")
+target_include_directories(clonecli5 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonecli5 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
