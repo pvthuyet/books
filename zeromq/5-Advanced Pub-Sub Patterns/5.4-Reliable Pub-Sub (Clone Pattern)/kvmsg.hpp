@@ -116,9 +116,12 @@ public:
     }
 
     //  Send getKey-value message to socket; any empty frames are sent as such.
-    void send(zmqpp::socket_t& socket)
+    void send(zmqpp::socket_t& socket, std::string const& identity = "")
     {
         zmqpp::message_t msg;
+        if (!identity.empty()) {
+            msg << identity;
+        }
         encodeProps();
         //  The rest of the method is unchanged from kvsimple
         //  .skip
