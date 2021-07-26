@@ -78,6 +78,7 @@ int main()
 			kvmsg msg(0);
 			msg.setKey(key);
 			msg.setBody(body);
+			msg.setProp("ttl", std::to_string(gen_num(1, 3)));
 			msg.send(push);
 			alarm = std::chrono::steady_clock::now();
 		}

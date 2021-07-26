@@ -232,7 +232,9 @@ public:
     //  Get message property, return "" if no such property is defined.
     std::string getProp(std::string const& name)
     {
-        if (props.count(name)) return props.at(name);
+        if (!props.empty()) {
+            if (props.count(name)) return props.at(name);
+        }
         return {};
     }
 
