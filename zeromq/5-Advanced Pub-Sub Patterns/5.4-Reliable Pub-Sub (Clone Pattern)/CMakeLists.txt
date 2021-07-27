@@ -51,3 +51,9 @@ target_link_libraries(clonecli5 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(clonesrv5 "clonesrv5.cpp" "kvmsg.hpp")
 target_include_directories(clonesrv5 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(clonesrv5 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+## Adding the Binary Star Pattern for Reliability
+# server
+add_executable(clonesrv6 "clonesrv6.cpp" "kvmsg.hpp" "bstar.hpp")
+target_include_directories(clonesrv6 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(clonesrv6 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
