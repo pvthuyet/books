@@ -10,3 +10,8 @@ target_link_libraries(fileio1 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
 add_executable(fileio2 "fileio2.cpp")
 target_include_directories(fileio2 PRIVATE ${SGLIB_INCLUDEDIR})
 target_link_libraries(fileio2 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
+
+# fileio3
+add_executable(fileio3 "fileio3.cpp")
+target_include_directories(fileio3 PRIVATE ${SGLIB_INCLUDEDIR})
+target_link_libraries(fileio3 PRIVATE ${WINDOWS_LIBRARIES} ${SGLIB_LIBRARIES})
