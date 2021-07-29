@@ -108,3 +108,5 @@ add_subdirectory("5-Advanced Pub-Sub Patterns/5.3-Slow Subscriber Detection (Sui
 add_subdirectory("5-Advanced Pub-Sub Patterns/5.4-Reliable Pub-Sub (Clone Pattern)")
 #
 add_subdirectory("7-Advanced Architecture using ZeroMQ/7.1-transferring file")
+#
+add_subdirectory("8-A Framework for Distributed Computing")
