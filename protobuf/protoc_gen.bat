@@ -1,0 +1,1 @@
+"D:\\projects\\saigonlib\\protobuf-3.17.3\\protobuf\\bin\\x64\\protoc.exe" -I="D:\\projects\\books\\protobuf\\address-book" --cpp_out="D:\\projects\\books\\protobuf\\address-book" "D:\\projects\\books\\protobuf\\\\address-book\\addressbook.proto"
