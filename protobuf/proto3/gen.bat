@@ -1,0 +1,1 @@
+protoc --proto_path=".;D:\projects\saigonlib\protobuf-3.17.3\protobuf\include" --cpp_out=. request.proto

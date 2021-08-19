@@ -109,3 +109,5 @@ foreach(flag_var
 endforeach()
 
 add_subdirectory("address-book")
+add_subdirectory("proto2")
+add_subdirectory("proto3")

@@ -1,0 +1,38 @@
+syntax = "proto2";
+package example;
+
+message Foo {
+	reserved 2, 15, 9 to 11;
+	reserved "foo", "bar";
+	enum EnumAllowingAlias {
+		option allow_alias = true;
+		UNKNOW = 0;
+		STARTED = 1;
+		RUNNING = 1;
+	}
+}
+
+message SearchRequest {
+	required string query=1;
+	optional int32 page_number = 2;
+	optional int32 result_per_page = 3 [default = 10];
+	enum Copus {
+		UNIVERSAL = 0;
+		WEB = 1;
+		IMAGES = 2;
+		LOCAL = 3;
+		NEWS = 4;
+		PRODUCTS = 5;
+		VIDEO = 6;
+	}
+	optional Copus corpus = 4 [default = UNIVERSAL];
+}
+
+import "result.proto";
+message SearchResponse {
+	repeated Result result = 1;
+}
+
+service SearchService {
+	rpc Search(SearchRequest) returns (SearchResponse);
+}
