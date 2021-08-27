@@ -1,14 +1,23 @@
 add_compile_definitions(DEBUG_ON) # for write debug spdlog
-#add_compile_definitions(_HAS_ITERATOR_DEBUGGING=0)
-#add_compile_definitions(_ITERATOR_DEBUG_LEVEL=2)
 
-find_program(_PROTOBUF_PROTOC protoc)
+set(GRPC_BINDIR "${SGLIB_ROOT}/${GRPC_NAME}/bin")
+set(PROTOBUF_BINDIR "${SGLIB_ROOT}/${PROTOBUF_NAME}/protobuf")
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+	set(GRPC_BINDIR "${GRPC_BINDIR}/x64")
+	set(PROTOBUF_BINDIR "${PROTOBUF_BINDIR}/x64")
+else()
+	set(GRPC_BINDIR "${GRPC_BINDIR}/win32")
+	set(PROTOBUF_BINDIR "${PROTOBUF_BINDIR}/win32")
+endif()
+
+find_program(_PROTOBUF_PROTOC protoc HINTS "${PROTOBUF_BINDIR}")
 if (NOT _PROTOBUF_PROTOC)
 	message(FATAL_ERROR "_PROTOBUF_PROTOC not found")
 endif()
 message(STATUS "_PROTOBUF_PROTOC: ${_PROTOBUF_PROTOC}")
 
-find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
+find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin HINTS ${GRPC_BINDIR})
 if (NOT _GRPC_CPP_PLUGIN_EXECUTABLE)
 	message(FATAL_ERROR "_GRPC_CPP_PLUGIN_EXECUTABLE not found")
 endif()
