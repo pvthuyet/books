@@ -1,4 +1,6 @@
 add_compile_definitions(DEBUG_ON) # for write debug spdlog
+#add_compile_definitions(_HAS_ITERATOR_DEBUGGING=0)
+#add_compile_definitions(_ITERATOR_DEBUG_LEVEL=2)
 
 find_program(_PROTOBUF_PROTOC protoc)
 if (NOT _PROTOBUF_PROTOC)
@@ -32,10 +34,26 @@ add_custom_command(
 	"${hw_proto}"
 	DEPENDS "${hw_proto}"
 )
+#include generated *.pb.h files
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
+
+# hw_grpc_proto
+add_library(hw_grpc_proto STATIC
+	${hw_grpc_srcs}
+	${hw_proto_srcs}
+)
+target_include_directories(hw_grpc_proto PRIVATE
+	${SGLIB_INCLUDEDIR}
+)
+target_link_libraries(hw_grpc_proto
+	${SGLIB_LIBRARIES}
+)
 
 add_executable(greeter-client 
-	"helloworld.pb.cc"
 	"greeter_client.cpp"
 )
-target_include_directories(greeter-client PRIVATE ${SGLIB_INCLUDEDIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(greeter-client PRIVATE ${SGLIB_LIBRARIES})
+target_include_directories(greeter-client PRIVATE ${SGLIB_INCLUDEDIR} ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(greeter-client PRIVATE 
+	hw_grpc_proto
+	${SGLIB_LIBRARIES}
+)

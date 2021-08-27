@@ -47,6 +47,9 @@ public:
 				fmt::print("E: subscriber cannot keep up, aborting.\n");
 				break;
 			}
+			else {
+				fmt::print("received message: {}\n", tp);
+			}
 			std::this_thread::sleep_for(chrono::milliseconds(1000 * (1 + gen_num(0, 2))));
 		}
 	}
