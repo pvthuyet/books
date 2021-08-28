@@ -38,7 +38,7 @@ target_link_libraries(hw_grpc_proto
 )
 
 foreach(_target
-	greeter_client)
+	greeter_client greeter_server)
 	add_executable(${_target} "${_target}.cpp")
 	target_include_directories(${_target} PRIVATE 
 		${_GRPC_INCLUDEDIR}
