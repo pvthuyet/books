@@ -1,27 +1,4 @@
-add_compile_definitions(DEBUG_ON) # for write debug spdlog
-
-set(GRPC_BINDIR "${SGLIB_ROOT}/${GRPC_NAME}/bin")
-set(PROTOBUF_BINDIR "${SGLIB_ROOT}/${PROTOBUF_NAME}/protobuf")
-
-if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(GRPC_BINDIR "${GRPC_BINDIR}/x64")
-	set(PROTOBUF_BINDIR "${PROTOBUF_BINDIR}/x64")
-else()
-	set(GRPC_BINDIR "${GRPC_BINDIR}/win32")
-	set(PROTOBUF_BINDIR "${PROTOBUF_BINDIR}/win32")
-endif()
-
-find_program(_PROTOBUF_PROTOC protoc HINTS "${PROTOBUF_BINDIR}")
-if (NOT _PROTOBUF_PROTOC)
-	message(FATAL_ERROR "_PROTOBUF_PROTOC not found")
-endif()
-message(STATUS "_PROTOBUF_PROTOC: ${_PROTOBUF_PROTOC}")
-
-find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin HINTS ${GRPC_BINDIR})
-if (NOT _GRPC_CPP_PLUGIN_EXECUTABLE)
-	message(FATAL_ERROR "_GRPC_CPP_PLUGIN_EXECUTABLE not found")
-endif()
-message(STATUS "_GRPC_CPP_PLUGIN_EXECUTABLE: ${_GRPC_CPP_PLUGIN_EXECUTABLE}")
+include(../cmake/common.cmake)
 
 # Proto file
 get_filename_component(hw_proto "${CMAKE_CURRENT_SOURCE_DIR}/helloworld.proto" ABSOLUTE)
@@ -52,17 +29,25 @@ add_library(hw_grpc_proto STATIC
 	${hw_proto_srcs}
 )
 target_include_directories(hw_grpc_proto PRIVATE
-	${SGLIB_INCLUDEDIR}
+	${_GRPC_INCLUDEDIR}
 )
 target_link_libraries(hw_grpc_proto
-	${SGLIB_LIBRARIES}
+	${_REFLECTION}
+	${_GRPC_GRPCPP}
+	${_PROTOBUF_LIBPROTOBUF}
 )
 
-add_executable(greeter-client 
-	"greeter_client.cpp"
-)
-target_include_directories(greeter-client PRIVATE ${SGLIB_INCLUDEDIR} ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(greeter-client PRIVATE 
-	hw_grpc_proto
-	${SGLIB_LIBRARIES}
-)
+foreach(_target
+	greeter_client)
+	add_executable(${_target} "${_target}.cpp")
+	target_include_directories(${_target} PRIVATE 
+		${_GRPC_INCLUDEDIR}
+		${CMAKE_CURRENT_SOURCE_DIR}
+		)
+	target_link_libraries(${_target} PRIVATE 
+		hw_grpc_proto
+		${_REFLECTION}
+		${_GRPC_GRPCPP}
+		${_PROTOBUF_LIBPROTOBUF}
+		)
+endforeach()
