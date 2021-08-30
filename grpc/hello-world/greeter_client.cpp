@@ -48,6 +48,23 @@ public:
 			return "RPC failed";
 		}
 	}
+
+	std::string SayHelloAgain(const std::string& user)
+	{
+		HelloRequest request;
+		request.set_name(user);
+		HelloReply reply;
+		ClientContext ctx;
+
+		auto status = stub_->SayHelloAgain(&ctx, request, &reply);
+		if (status.ok()) {
+			return reply.message();
+		}
+		else {
+			std::cout << status.error_code() << ": " << status.error_message() << std::endl;
+			return "RPC failed";
+		}
+	}
 };
 
 int main(int argc, char** argv)
@@ -57,20 +74,17 @@ int main(int argc, char** argv)
 	// the argument "--target=" which is the only expected argument.
 	// We indicate that the channel isn't authenticated (use of
 	// InsecureChannelCredentials()).
-	std::string target_str;
-	std::string arg_str("--target");
-	if (argc > 1) {
+	std::string target_str = "localhost:50051";
 
-	}
-	else {
-		target_str = "localhost:50051";
-	}
 	GreeterClient greeter(
 		grpc::CreateChannel(target_str, grpc::InsecureChannelCredentials())
 	);
 
-	std::string user("world");
+	std::string user = std::format("world");
 	std::string reply = greeter.SayHello(user);
+	std::cout << "Greeter received: " << reply << std::endl;
+
+	reply = greeter.SayHelloAgain(user);
 	std::cout << "Greeter received: " << reply << std::endl;
 
 	return EXIT_SUCCESS;
