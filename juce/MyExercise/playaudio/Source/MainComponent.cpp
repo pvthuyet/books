@@ -23,6 +23,15 @@ MainComponent::MainComponent()
     stopButton.setColour(juce::TextButton::buttonColourId, juce::Colours::red);
     stopButton.setEnabled(false);
 
+    // Toggle button
+    addAndMakeVisible(&loopingToggle);
+    loopingToggle.setButtonText("Loop");
+    loopingToggle.onClick = [this] { loopButtonChanged(); };
+
+    // Text box
+    addAndMakeVisible(&currentPositionLabel);
+    currentPositionLabel.setText("Stopped", juce::dontSendNotification);
+
     // Make sure you set the size of the component after
     // you add any child components.
     setSize (300, 200);
@@ -42,6 +51,7 @@ MainComponent::MainComponent()
         // Specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
     }
+    startTimer(20);
 }
 
 MainComponent::~MainComponent()
@@ -104,6 +114,8 @@ void MainComponent::resized()
     openButton.setBounds(10, 10, getWidth() - 20, 20);
     playButton.setBounds(10, 40, getWidth() - 20, 20);
     stopButton.setBounds(10, 70, getWidth() - 20, 20);
+    loopingToggle.setBounds(10, 100, getWidth() - 20, 20);
+    currentPositionLabel.setBounds(10, 130, getWidth() - 20, 20);
 }
 
 void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
@@ -112,8 +124,29 @@ void MainComponent::changeListenerCallback(juce::ChangeBroadcaster* source)
     {
         if (transportSource.isPlaying())
             changeState(Playing);
-        else 
+        else if (state == Stopping || state == Playing)
             changeState(Stopped);
+        else if (Pausing == state)
+            changeState(Paused);
+    }
+}
+
+void MainComponent::timerCallback()
+{
+    if (transportSource.isPlaying())
+    {
+        juce::RelativeTime position(transportSource.getCurrentPosition());
+
+        auto minutes = (int)position.inMinutes() % 60;
+        auto seconds = (int)position.inSeconds() % 60;
+        auto millis = (int)position.inMilliseconds() % 1000;
+
+        auto posStr = juce::String::formatted("%02d:%02d:%03d", minutes, seconds, millis);
+        currentPositionLabel.setText(posStr, juce::dontSendNotification);
+    }
+    else
+    {
+        currentPositionLabel.setText("Stopped", juce::dontSendNotification);
     }
 }
 
@@ -143,12 +176,31 @@ void MainComponent::openButtonClicked()
 
 void MainComponent::playButtonClicked()
 {
-    changeState(Starting);
+    updateLoopState(loopingToggle.getToggleState());
+    if (state == Stopped || state == Paused)
+        changeState(Starting);
+    else if (state == Playing)
+        changeState(Pausing);
 }
 
 void MainComponent::stopButtonClicked()
 {
-    changeState(Stopping);
+    if (state == Paused)
+        changeState(Stopped);
+    else
+        changeState(Stopping);
+}
+
+void MainComponent::loopButtonChanged()
+{
+    updateLoopState(loopingToggle.getToggleState());
+}
+
+void MainComponent::updateLoopState(bool shouldLoop)
+{
+    if (readerSource) {
+        readerSource->setLooping(shouldLoop);
+    }
 }
 
 void MainComponent::changeState(TransportState newState)
@@ -160,18 +212,29 @@ void MainComponent::changeState(TransportState newState)
     switch (state)
     {
     case MainComponent::Stopped:
+        playButton.setButtonText("Play");
+        stopButton.setButtonText("Stop");
         stopButton.setEnabled(false);
-        playButton.setEnabled(true);
         transportSource.setPosition(0.0);
         break;
 
     case MainComponent::Starting:
-        playButton.setEnabled(false);
         transportSource.start();
         break;
 
     case MainComponent::Playing:
+        playButton.setButtonText("Pause");
+        stopButton.setButtonText("Stop");
         stopButton.setEnabled(true);
+        break;
+
+    case MainComponent::Pausing:
+        transportSource.stop();
+        break;
+
+    case MainComponent::Paused:
+        playButton.setButtonText("Resume");
+        stopButton.setButtonText("Return to Zero");
         break;
 
     case MainComponent::Stopping:
